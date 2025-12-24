@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego del Impostor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 80px;
+      text-align: center;
+    }
+    .card {
+      margin-top: 30px;
+      font-size: 28px;
+      font-weight: bold;
+      padding: 30px;
+      border: 2px solid #fff;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎭 Juego del Impostor</h1>
+
+  <p>Número de jugadores:</p>
+  <input type="number" id="players" min="3" value="4">
+
+  <br><br>
+  <button onclick="crearJuego()">Crear sala</button>
+
+  <div id="game" style="display:none;">
+    <h2>Jugador <span id="currentPlayer">1</span></h2>
+    <button onclick="verPalabra()">Ver palabra</button>
+
+    <div class="card" id="wordCard"></div>
+
+    <br>
+    <button onclick="siguienteJugador()">Siguiente jugador</button>
+  </div>
+
+<script>
+  const palabras = [
+    "Playa","Hospital","Escuela","Aeropuerto","Restaurante",
+    "Cine","Gimnasio","Supermercado","Banco","Discoteca",
+    "Hotel","Iglesia","Parque","Estadio","Biblioteca"
+  ];
+
+  let jugadores = 0;
+  let impostor = 0;
+  let palabra = "";
+  let turno = 1;
+
+  function crearJuego() {
+    jugadores = parseInt(document.getElementById("players").value);
+    if (jugadores < 3) {
+      alert("Mínimo 3 jugadores");
+      return;
+    }
+    impostor = Math.floor(Math.random() * jugadores) + 1;
+    palabra = palabras[Math.floor(Math.random() * palabras.length)];
+    document.getElementById("game").style.display = "block";
+    document.getElementById("currentPlayer").innerText = turno;
+  }
+
+  function verPalabra() {
+    const card = document.getElementById("wordCard");
+    card.style.display = "block";
+    card.innerText = (turno === impostor) ? "IMPOSTOR" : palabra;
+  }
+
+  function siguienteJugador() {
+    document.getElementById("wordCard").style.display = "none";
+    turno++;
+    if (turno > jugadores) {
+      alert("¡Todos listos! Empieza el juego 🔥");
+      location.reload();
+    } else {
+      document.getElementById("currentPlayer").innerText = turno;
+    }
+  }
+</script>
+
+</body>
+</html>
