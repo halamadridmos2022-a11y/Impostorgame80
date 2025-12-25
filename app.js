@@ -1,12 +1,11 @@
-// 1) Pega aquí tu firebaseConfig REAL (el que copiaste de Firebase)
 const firebaseConfig = {
-  // apiKey: "...",
-  // authDomain: "...",
-  // projectId: "...",
-  // storageBucket: "...",
-  // messagingSenderId: "...",
-  // appId: "...",
-  // measurementId: "..."
+  apiKey: "AIzaSy...",
+  authDomain: "impostor-online-11805.firebaseapp.com",
+  projectId: "impostor-online-11805",
+  storageBucket: "impostor-online-11805.appspot.com",
+  messagingSenderId: "409319191950",
+  appId: "1:409319191950:web:...",
+  measurementId: "G-..."
 };
 
 firebase.initializeApp(firebaseConfig);
