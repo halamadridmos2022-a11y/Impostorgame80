@@ -17,11 +17,61 @@ const TIME_DISCUSSION = 15 * 60; // 15 minutos en segundos
 const TIME_VOTING = 2 * 60;      // 2 minutos en segundos
 
 const CATEGORIES = {
+    // --- CLÁSICOS ---
     "Juguetes": { words: ["Muñeca", "Oso peluche", "Coche RC", "Robot"], impostorWords: ["Soldado", "Action Man", "Tren", "Barco pirata"] },
-    "Animales": { words: ["Gato", "Perro", "Hámster", "Loro"], impostorWords: ["Conejo", "Zorro", "Hurón", "Águila"] },
-    "Comida": { words: ["Hamburguesa", "Perrito", "Pizza", "Kebab"], impostorWords: ["Taco", "Sandwich", "Burrito", "Nuggets"] },
-    "Deportes": { words: ["Fútbol", "Baloncesto", "Tenis", "Voleibol"], impostorWords: ["Rugby", "Balonmano", "Pádel", "Golf"] },
-    "Oficina": { words: ["Ordenador", "Teclado", "Ratón", "Impresora"], impostorWords: ["Tablet", "Máquina escribir", "Escáner", "Fax"] }
+    "Animales Domésticos": { words: ["Gato", "Perro", "Hámster", "Loro"], impostorWords: ["Conejo", "Zorro", "Hurón", "Tortuga"] },
+    "Comida Rápida": { words: ["Hamburguesa", "Perrito", "Pizza", "Kebab"], impostorWords: ["Taco", "Sandwich", "Burrito", "Nuggets"] },
+    "Deportes": { words: ["Fútbol", "Baloncesto", "Tenis", "Voleibol"], impostorWords: ["Rugby", "Balonmano", "Pádel", "Béisbol"] },
+    "Oficina": { words: ["Ordenador", "Teclado", "Ratón", "Impresora"], impostorWords: ["Tablet", "Máquina escribir", "Escáner", "Fax"] },
+
+    // --- ALIMENTACIÓN ---
+    "Frutas": { words: ["Manzana", "Pera", "Plátano", "Naranja"], impostorWords: ["Melocotón", "Mango", "Piña", "Kiwi"] },
+    "Verduras": { words: ["Lechuga", "Tomate", "Zanahoria", "Pepino"], impostorWords: ["Espinaca", "Pimiento", "Calabacín", "Berenjena"] },
+    "Desayuno": { words: ["Café", "Tostada", "Cereales", "Zumo"], impostorWords: ["Té", "Croissant", "Galletas", "Leche"] },
+    "Postres": { words: ["Helado", "Tarta", "Flan", "Yogur"], impostorWords: ["Brownie", "Natillas", "Gelatina", "Crepes"] },
+    "Bebidas": { words: ["Coca-Cola", "Fanta", "Agua", "Sprite"], impostorWords: ["Pepsi", "Aquarius", "Gaseosa", "7 Up"] },
+    "Alcohol": { words: ["Cerveza", "Vino", "Whisky", "Vodka"], impostorWords: ["Sidra", "Champán", "Ron", "Ginebra"] },
+
+    // --- LUGARES ---
+    "Ciudad": { words: ["Parque", "Cine", "Biblioteca", "Museo"], impostorWords: ["Plaza", "Teatro", "Librería", "Galería"] },
+    "Escuela": { words: ["Pizarra", "Pupitre", "Profesor", "Examen"], impostorWords: ["Proyector", "Silla", "Director", "Deberes"] },
+    "Casa": { words: ["Salón", "Cocina", "Baño", "Dormitorio"], impostorWords: ["Comedor", "Despensa", "Aseo", "Desván"] },
+    "Verano": { words: ["Playa", "Piscina", "Arena", "Mar"], impostorWords: ["Río", "Lago", "Tierra", "Océano"] },
+    "Transporte": { words: ["Coche", "Moto", "Autobús", "Camión"], impostorWords: ["Bici", "Patinete", "Tren", "Furgoneta"] },
+    "Países Europa": { words: ["España", "Francia", "Italia", "Alemania"], impostorWords: ["Portugal", "Bélgica", "Grecia", "Holanda"] },
+
+    // --- OBJETOS Y TECNOLOGÍA ---
+    "Ropa Invierno": { words: ["Abrigo", "Bufanda", "Guantes", "Gorro"], impostorWords: ["Chaqueta", "Pañuelo", "Manoplas", "Sombrero"] },
+    "Ropa Verano": { words: ["Camiseta", "Pantalón corto", "Bikini", "Chanclas"], impostorWords: ["Tirantes", "Bermudas", "Bañador", "Sandalias"] },
+    "Baño": { words: ["Cepillo dientes", "Pasta", "Jabón", "Toalla"], impostorWords: ["Hilo dental", "Enjuague", "Gel", "Albornoz"] },
+    "Herramientas": { words: ["Martillo", "Destornillador", "Taladro", "Sierra"], impostorWords: ["Mazo", "Llave inglesa", "Lijadora", "Hacha"] },
+    "Cocina": { words: ["Sartén", "Olla", "Cuchillo", "Tenedor"], impostorWords: ["Wok", "Cazuela", "Tijeras", "Cuchara"] },
+    "Redes Sociales": { words: ["Instagram", "TikTok", "Twitter", "Facebook"], impostorWords: ["Snapchat", "YouTube", "LinkedIn", "WhatsApp"] },
+    "Consolas": { words: ["PlayStation", "Xbox", "Nintendo Switch", "PC Gamer"], impostorWords: ["Wii", "Game Boy", "PSP", "Tablet"] },
+
+    // --- NATURALEZA Y CIENCIA ---
+    "Insectos": { words: ["Mosca", "Mosquito", "Abeja", "Hormiga"], impostorWords: ["Avispa", "Polilla", "Escarabajo", "Araña"] },
+    "Animales Salvajes": { words: ["León", "Tigre", "Elefante", "Jirafa"], impostorWords: ["Leopardo", "Pantera", "Rinoceronte", "Cebra"] },
+    "Clima": { words: ["Lluvia", "Nieve", "Viento", "Tormenta"], impostorWords: ["Granizo", "Niebla", "Huracán", "Trueno"] },
+    "Cuerpo Humano": { words: ["Mano", "Pie", "Ojo", "Boca"], impostorWords: ["Brazo", "Pierna", "Oreja", "Nariz"] },
+    "Universo": { words: ["Sol", "Luna", "Estrella", "Planeta"], impostorWords: ["Cometa", "Satélite", "Galaxia", "Asteroide"] },
+
+    // --- PROFESIONES Y HOBBIES ---
+    "Música": { words: ["Guitarra", "Piano", "Batería", "Violín"], impostorWords: ["Bajo", "Teclado", "Tambor", "Violonchelo"] },
+    "Profesiones Salud": { words: ["Médico", "Enfermero", "Dentista", "Cirujano"], impostorWords: ["Veterinario", "Farmacéutico", "Psicólogo", "Fisioterapeuta"] },
+    "Profesiones Uniforme": { words: ["Policía", "Bombero", "Militar", "Piloto"], impostorWords: ["Guardia Civil", "Rescatista", "Marinero", "Azafata"] },
+    "Arte": { words: ["Pintar", "Dibujar", "Esculpir", "Fotografiar"], impostorWords: ["Colorear", "Trazar", "Modelar", "Grabar"] },
+
+    // --- CULTURA POP ---
+    "Superhéroes DC": { words: ["Batman", "Superman", "Wonder Woman", "Flash"], impostorWords: ["Robin", "Aquaman", "Supergirl", "Linterna Verde"] },
+    "Superhéroes Marvel": { words: ["Spiderman", "Iron Man", "Thor", "Hulk"], impostorWords: ["Capitán América", "Black Panther", "Doctor Strange", "Ant-Man"] },
+    "Fantasía": { words: ["Dragón", "Mago", "Elfo", "Orco"], impostorWords: ["Grifo", "Brujo", "Enano", "Troll"] },
+    "Terror": { words: ["Fantasma", "Vampiro", "Zombi", "Hombre Lobo"], impostorWords: ["Espectro", "Drácula", "Momia", "Monstruo"] },
+    "Cine": { words: ["Actor", "Director", "Película", "Palomitas"], impostorWords: ["Extra", "Guionista", "Serie", "Refresco"] },
+    
+    // --- COLORES Y FORMAS ---
+    "Colores": { words: ["Rojo", "Azul", "Verde", "Amarillo"], impostorWords: ["Naranja", "Violeta", "Turquesa", "Rosa"] },
+    "Formas": { words: ["Cuadrado", "Círculo", "Triángulo", "Rectángulo"], impostorWords: ["Rombo", "Óvalo", "Pirámide", "Cubo"] }
 };
 
 // --- ESTADO ---
