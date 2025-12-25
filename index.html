@@ -1,100 +1,66 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Juego del Impostor</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Impostor Online</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
-      text-align: center;
-      padding: 40px;
-    }
-    button {
-      padding: 12px 20px;
-      font-size: 16px;
-      margin: 10px;
-      cursor: pointer;
-    }
-    input {
-      padding: 10px;
-      font-size: 16px;
-      width: 80px;
-      text-align: center;
-    }
-    .card {
-      margin-top: 30px;
-      font-size: 28px;
-      font-weight: bold;
-      padding: 30px;
-      border: 2px solid #fff;
-      display: none;
-    }
+    body{font-family:Arial;background:#111;color:#fff;text-align:center;padding:24px}
+    input,button{padding:12px 14px;font-size:16px;border-radius:10px;border:0;margin:6px}
+    button{cursor:pointer}
+    .box{max-width:560px;margin:0 auto;background:#1b1b1b;padding:16px;border-radius:14px}
+    .muted{opacity:.8;font-size:14px}
+    .big{font-size:28px;font-weight:800;margin:16px 0}
+    .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .hr{height:1px;background:#333;margin:16px 0}
+    .list{max-width:360px;margin:10px auto;text-align:left}
+    .pill{display:inline-block;background:#2a2a2a;padding:6px 10px;border-radius:999px;margin:4px}
   </style>
 </head>
 <body>
+  <h1>🎭 Impostor Online</h1>
 
-  <h1>🎭 Juego del Impostor</h1>
+  <div class="box">
+    <div class="row">
+      <button id="createRoomBtn">Crear sala</button>
+    </div>
 
-  <p>Número de jugadores:</p>
-  <input type="number" id="players" min="3" value="4">
+    <div class="hr"></div>
 
-  <br><br>
-  <button onclick="crearJuego()">Crear sala</button>
+    <div class="row">
+      <input id="roomCodeInput" placeholder="Código sala (6)" maxlength="6" />
+      <input id="nameInput" placeholder="Tu nombre" maxlength="16" />
+      <button id="joinBtn">Entrar</button>
+    </div>
 
-  <div id="game" style="display:none;">
-    <h2>Jugador <span id="currentPlayer">1</span></h2>
-    <button onclick="verPalabra()">Ver palabra</button>
+    <p class="muted" id="status">Crea una sala o entra con un código.</p>
 
-    <div class="card" id="wordCard"></div>
+    <div class="hr"></div>
 
-    <br>
-    <button onclick="siguienteJugador()">Siguiente jugador</button>
+    <div id="hostPanel" style="display:none;">
+      <p><b>Host</b>: comparte este código:</p>
+      <div class="big" id="roomCodeBig">------</div>
+      <p class="muted">Jugadores: <span id="playersCount">0</span></p>
+      <div class="list" id="playersList"></div>
+      <button id="startBtn">Iniciar juego</button>
+      <p class="muted">Al iniciar, a 1 le toca IMPOSTOR.</p>
+      <div class="hr"></div>
+    </div>
+
+    <div id="playerPanel" style="display:none;">
+      <p>Sala: <b id="roomCodeSmall">------</b></p>
+      <p>Jugador: <b id="playerName">---</b></p>
+      <button id="revealBtn" disabled>Ver mi palabra</button>
+      <div class="big" id="roleBox" style="display:none;"></div>
+      <p class="muted" id="hint">Espera a que el host inicie.</p>
+    </div>
   </div>
 
-<script>
-  const palabras = [
-    "Playa","Hospital","Escuela","Aeropuerto","Restaurante",
-    "Cine","Gimnasio","Supermercado","Banco","Discoteca",
-    "Hotel","Iglesia","Parque","Estadio","Biblioteca"
-  ];
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 
-  let jugadores = 0;
-  let impostor = 0;
-  let palabra = "";
-  let turno = 1;
-
-  function crearJuego() {
-    jugadores = parseInt(document.getElementById("players").value);
-    if (jugadores < 3) {
-      alert("Mínimo 3 jugadores");
-      return;
-    }
-    impostor = Math.floor(Math.random() * jugadores) + 1;
-    palabra = palabras[Math.floor(Math.random() * palabras.length)];
-    document.getElementById("game").style.display = "block";
-    document.getElementById("currentPlayer").innerText = turno;
-  }
-
-  function verPalabra() {
-    const card = document.getElementById("wordCard");
-    card.style.display = "block";
-    card.innerText = (turno === impostor) ? "IMPOSTOR" : palabra;
-  }
-
-  function siguienteJugador() {
-    document.getElementById("wordCard").style.display = "none";
-    turno++;
-    if (turno > jugadores) {
-      alert("¡Todos listos! Empieza el juego 🔥");
-      location.reload();
-    } else {
-      document.getElementById("currentPlayer").innerText = turno;
-    }
-  }
-</script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-<script src="app.js"></script></body>
+  <!-- App -->
+  <script src="app.js"></script>
+</body>
 </html>
