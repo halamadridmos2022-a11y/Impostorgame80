@@ -79,6 +79,11 @@ input:focus { border-color: var(--primary); }
 .action-btn.warning { background: var(--warning); color: #000; }
 .action-btn.text-only { background: transparent; color: var(--text-muted); }
 .danger-text { color: var(--danger) !important; }
+.action-btn:disabled {
+    opacity: 0.7;
+    cursor: wait; /* Muestra el reloj de arena o círculo de carga del sistema */
+    pointer-events: none; /* Evita clics extra */
+}
 
 /* Lobby */
 .lobby-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }

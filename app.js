@@ -110,6 +110,22 @@ function switchTab(tab) {
     }
 }
 
+function toggleLoading(btnId, isLoading) {
+    const btn = $(btnId);
+    if (isLoading) {
+        // Guardamos el texto original para restaurarlo luego
+        if (!btn.dataset.originalText) btn.dataset.originalText = btn.innerText;
+        
+        btn.disabled = true;
+        // Icono giratorio de FontAwesome
+        btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Cargando...`;
+    } else {
+        btn.disabled = false;
+        // Restauramos el texto original
+        if (btn.dataset.originalText) btn.innerText = btn.dataset.originalText;
+    }
+}
+
 function toggleCard() {
     // Si el jugador está muerto, no dejamos girar la carta (opcional)
     if (state.isDead) return;
@@ -130,49 +146,86 @@ function formatTime(seconds) {
 $('btnCreate').addEventListener('click', async () => {
     const name = $('usernameInput').value.trim();
     const code = $('createCodeInput').value.trim().toUpperCase();
-    if (!name || code.length < 4) return alert("Nombre y código (mín 4) requeridos.");
-
-    // Verificar y borrar si existe (limpieza sucia de hosts desconectados)
-    const ref = db.collection("rooms").doc(code);
-    const snap = await ref.get();
-    if (snap.exists) {
-        if(!confirm("Esa sala existe. Si eres el dueño anterior y se quedó colgada, acepta para reiniciarla. Si no, cancela y usa otro código.")) return;
-        await cleanRoom(code); // Limpiar sala previa
-    }
-
-    $('btnCreate').innerText = "Creando...";
     
-    await ref.set({
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        status: "lobby", 
-        hostName: name,
-        round: 1,
-        aliveCount: 1,
-        timerEnd: null // Timestamp para sincronizar relojes
-    });
+    if (!name || code.length < 4) return alert("Nombre y código (mín 4 letras) requeridos.");
 
-    const pRef = await ref.collection("players").add({
-        name, isHost: true, isDead: false, joinedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    // 1. ACTIVAR CARGA
+    toggleLoading('btnCreate', true);
 
-    setupGame(code, pRef.id, name, true);
+    try {
+        // Verificar y borrar si existe
+        const ref = db.collection("rooms").doc(code);
+        const snap = await ref.get();
+        
+        if (snap.exists) {
+            // Si el usuario cancela, desactivamos carga y salimos
+            if(!confirm("Esa sala existe. ¿Quieres reiniciarla?")) {
+                toggleLoading('btnCreate', false);
+                return;
+            }
+            await cleanRoom(code);
+        }
+
+        await ref.set({
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            status: "lobby", 
+            hostName: name,
+            round: 1,
+            aliveCount: 1,
+            timerEnd: null
+        });
+
+        const pRef = await ref.collection("players").add({
+            name, isHost: true, isDead: false, joinedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        setupGame(code, pRef.id, name, true);
+        
+        // Nota: No hace falta desactivar el loading aquí porque cambiamos de pantalla inmediatamente.
+
+    } catch (error) {
+        console.error(error);
+        alert("Error al crear la sala: " + error.message);
+        toggleLoading('btnCreate', false); // DESACTIVAR CARGA SI FALLA
+    }
 });
 
 $('btnJoin').addEventListener('click', async () => {
     const name = $('usernameInput').value.trim();
     const code = $('joinCodeInput').value.trim().toUpperCase();
+    
     if (!name || !code) return alert("Faltan datos.");
 
-    const ref = db.collection("rooms").doc(code);
-    const snap = await ref.get();
-    if (!snap.exists) return alert("Sala no existe.");
-    if (snap.data().status !== 'lobby') return alert("Partida en curso.");
+    // 1. ACTIVAR CARGA
+    toggleLoading('btnJoin', true);
 
-    const pRef = await ref.collection("players").add({
-        name, isHost: false, isDead: false, joinedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    try {
+        const ref = db.collection("rooms").doc(code);
+        const snap = await ref.get();
+        
+        if (!snap.exists) {
+            alert("Sala no existe.");
+            toggleLoading('btnJoin', false); // DESACTIVAR CARGA
+            return;
+        }
+        
+        if (snap.data().status !== 'lobby') {
+            alert("La partida ya ha comenzado.");
+            toggleLoading('btnJoin', false); // DESACTIVAR CARGA
+            return;
+        }
 
-    setupGame(code, pRef.id, name, false);
+        const pRef = await ref.collection("players").add({
+            name, isHost: false, isDead: false, joinedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        setupGame(code, pRef.id, name, false);
+        
+    } catch (error) {
+        console.error(error);
+        alert("Error al unirse: " + error.message);
+        toggleLoading('btnJoin', false); // DESACTIVAR CARGA SI FALLA
+    }
 });
 
 function setupGame(code, pid, name, isHost) {
